@@ -15,8 +15,8 @@ const fs = require('fs');
 //     console.log("input stream closed");
 //     process.exit(0);
 //   })
-const textin =fs.readFileSync ('./input.txt', 'utf8'); 
+const textin =fs.readFileSync ('./files/input.txt', 'utf8'); 
 console.log(textin);
 const content = `data read from file: ${textin} . \n Date created: ${new Date()}`;
-fs.writeFileSync('./output.txt', content)
+fs.writeFileSync('./files/output.txt', content)
 console.log("file written successfully");
