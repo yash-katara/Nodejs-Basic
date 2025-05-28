@@ -1,6 +1,7 @@
 const { log } = require('console');
 const express = require('express');
 const fs = require('fs');
+const { get } = require('http');
 let app = express();
 app.use(express.json()); 
 const port = 3000;
@@ -16,9 +17,8 @@ let movies = JSON.parse(fs.readFileSync('./data/movies.json', 'utf8', (err, data
         console.error('Error parsing JSON:', parseError);
     }
 }));
-
-// GEt request to add a new movie
-app.get('/api/v1/movies',(req,res)=>{
+//Route Handler Functions
+const getallMovies = (req,res)=>{
     
     res.status(200).json({
         status: 'success',
@@ -26,10 +26,9 @@ app.get('/api/v1/movies',(req,res)=>{
             movies: movies
         }
     });
-});
+}
 
-// GET request to get a movie by ID
-app.get('/api/v1/movies/:id',(req,res)=>{
+const getmovie = (req,res)=>{
     log('Request params:', req.params);
   
    // const movieId = parseInt(req.params.id, 10); convert string to number
@@ -47,10 +46,9 @@ app.get('/api/v1/movies/:id',(req,res)=>{
             movie: movie
         }
     });
-});
+}
 
-// POST request to add a new movie
-app.post('/api/v1/movies',(req,res)=>{
+const postMovie = (req,res)=>{
     
     const newMovie = req.body;
     console.log('request body:', req.body);
@@ -75,11 +73,9 @@ app.post('/api/v1/movies',(req,res)=>{
             movie: newMovie
         }
     });
-})
+}
 
-
-//patch request to update a movie
-app.patch('/api/v1/movies/:id',(req,res)=>{
+const patchMovie = (req,res)=>{
     const movieId = req.params.id * 1; // Convert the ID to a number
     const movieIndex = movies.findIndex(m => m.id === movieId);
     if (movieIndex === -1) {
@@ -109,9 +105,9 @@ app.patch('/api/v1/movies/:id',(req,res)=>{
             movie: updatedMovie
         }
     });
-})
-// DELETE request to delete a movie 
-app.delete('/api/v1/movies/:id',(req,res)=>{
+}
+
+const deleteMovie =  (req,res)=>{
     const movieId = req.params.id * 1; // Convert the ID to a number
     const movieIndex = movies.findIndex(m => m.id === movieId);
     if (movieIndex === -1) {
@@ -136,7 +132,24 @@ app.delete('/api/v1/movies/:id',(req,res)=>{
         status: 'success',
         data: null
     });
-})
+}
+
+
+// app.get('/api/v1/movies', getallMovies);
+// app.get('/api/v1/movies/:id', getmovie);
+// app.post('/api/v1/movies', postMovie)
+// app.patch('/api/v1/movies/:id', patchMovie); 
+// app.delete('/api/v1/movies/:id', deleteMovie)  
+
+app.route("/api/v1/movies")
+    .get(getallMovies)
+    .post(postMovie);
+
+app.route("/api/v1/movies/:id")
+    .get(getmovie)
+    .patch(patchMovie)
+    .delete(deleteMovie);
+
 app.listen(port, ()=>{
     console.log(`Server is running on http://localhost:${port}`);
 })
