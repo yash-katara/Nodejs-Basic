@@ -7,6 +7,14 @@ const { getallMovies, getmovie, postMovie, patchMovie, deleteMovie } = moviesCon
 const router = express.Router();
 //const moviesRouter = express.Router();
 
+router.param('id',(req,res,next,value) =>{
+    console.log('Movie id is' + value);
+    next(); 
+    }
+
+  
+); 
+
 router.route("/")
     .get(moviesController.getallMovies)
     .post(moviesController.postMovie);

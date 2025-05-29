@@ -25,7 +25,7 @@ exports.getallMovies = (req,res)=>{
 }
 
 exports.getmovie = (req,res)=>{
-    log('Request params:', req.params);
+   console.log('Request params:', req.params);
   
    // const movieId = parseInt(req.params.id, 10); convert string to number
    const movieId = req.params.id *1; // Convert the ID to a number
